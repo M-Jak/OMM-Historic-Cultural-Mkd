@@ -13,13 +13,20 @@ public class CoordsFilter implements Filter<String>{
                     .split("\\s++");
         }
         else {
-            lonLat=coords.replace("))\"", "")
-                    .strip()
-                    .split("\\s++");
+            String test = coords.replace("))\"", "");
+            test = test.strip();
+            lonLat=test.split("\\s++");
+            int index = input.indexOf("\"");
+            input = input.substring(0,index);
+            parts = input.split(",", -1);
         }
         String coordinates= lonLat[1]+" "+lonLat[0];
-        for ( int i=0; i < parts.length - 2; i++ ) {
-            result.append(parts[i]).append(",");
+        for ( int i=0; i < parts.length-1; i++ ) {
+            String part = parts[i];
+            if(!part.isEmpty())
+                result.append(part)
+                    .append(",");
+            else result.append(",");
         }
         result.append(coordinates);
         return result.toString();
