@@ -1,5 +1,5 @@
 
-public class HistoricFilter implements Filter<String>{
+public class ArcheologicFilter implements Filter<String>{
     @Override
     public String execute( String input ) {
         if(input.contains("amenity") || input.isEmpty())
@@ -20,9 +20,9 @@ public class HistoricFilter implements Filter<String>{
         //historic:monument = name,tourism,historic,name:en,WKT
         else if(parts[2].equals("archaeological_site") || parts[2].equals("monument")){
             result.append(parts[0]).append(",");
+            result.append(parts[1]).append(",");
             result.append(parts[2]).append(",");
-            result.append(parts[3]).append(",");
-            result.append(parts[4]);
+            result.append(parts[3]);
         }
         return result.toString();
     }
