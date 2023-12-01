@@ -1,4 +1,4 @@
-package com.dians.omm.prototype;
+package com.omm.prototype;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
