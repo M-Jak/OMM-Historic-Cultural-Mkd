@@ -32,8 +32,8 @@ public class PinRepository {
                 continue;
             String[] parts = input.split(",");
             pins.add(new Pin(parts[0], parts[1], Double.parseDouble(parts[3].split(" ")[0]), Double.parseDouble(parts[3].split(" ")[1])));
-            if(counter++==3)
-                break;
+            if(counter++==180)
+                continue;
         }
         s.close();
         return pins;
