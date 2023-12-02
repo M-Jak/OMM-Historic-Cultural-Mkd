@@ -1,12 +1,15 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, {useEffect, useState, useRef} from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import "leaflet-routing-machine";
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import blueMarker from "./marker_blue.svg";
 import redMarker from "./marker_red.svg";
 
 const List = () => {
     const [state, setState] = useState([]);
     const [selectedLink, setSelectedLink] = useState(null);
+    const [routingControl, setRoutingControl] = useState(null);
     const mapRef = useRef(null);
     const placeIcon = L.icon({
         iconUrl: blueMarker,
@@ -48,55 +51,110 @@ const List = () => {
             });
 
             state.forEach((item) => {
-                const marker = L.marker(
-                    [item.latitude, item.longitude],
-                    { icon: placeIcon }
-                ).addTo(mapRef.current);
+                const marker = L.marker([item.latitude, item.longitude], {
+                    icon: placeIcon,
+                }).addTo(mapRef.current);
+
                 marker
                     .bindPopup(
                         `<b>Name: ${item.name}</b><br>Type: ${item.type}<br>English name: ${item.en_name}`
                     )
-                    .openPopup();
+                    .on("click", () => {
+                        // Generate directions from user's location to the clicked marker
+                        if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(
+                                (position) => {
+                                    const {latitude, longitude} = position.coords;
+                                    const waypoints = [
+                                        L.latLng(latitude, longitude),
+                                        L.latLng(item.latitude, item.longitude),
+                                    ];
+
+                                    if (routingControl) {
+                                        // Clear existing routes before generating new ones
+                                        routingControl.setWaypoints(waypoints);
+                                    } else {
+                                        const control = L.Routing.control({
+                                            waypoints,
+                                            routeWhileDragging: true,
+                                            lineOptions: {
+                                                styles: [
+                                                    { color: "blue", weight: 3 },
+                                                ],
+                                            },
+                                        }).addTo(mapRef.current);
+
+                                        setRoutingControl(control);
+                                    }
+                                },
+                                (error) => {
+                                    console.error(
+                                        "Error getting current location:",
+                                        error.message
+                                    );
+                                }
+                            );
+                        } else {
+                            console.error(
+                                "Geolocation is not supported by your browser"
+                            );
+                        }
+                    });
             });
 
             // Add marker for the user's current location
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    const { latitude, longitude } = position.coords;
-                    const userMarker = L.marker([latitude, longitude],{icon:userIcon}).addTo(
-                        mapRef.current
-                    );
-                    userMarker.bindPopup("Your Current Location").openPopup();
+                    const {latitude, longitude} = position.coords;
+                    const userMarker = L.marker([latitude, longitude], {
+                        icon: userIcon,
+                    }).addTo(mapRef.current);
+                    userMarker
+                        .bindPopup("Your Current Location")
+                        .openPopup();
                 },
                 (error) => {
-                    console.error("Error getting current location:", error.message);
+                    console.error(
+                        "Error getting current location:",
+                        error.message
+                    );
                 }
             );
         }
-    }, [placeIcon, state, userIcon]);
+    }, [placeIcon, state, userIcon, routingControl]);
 
     const displayByType = (link) => {
         setState([]);
         setSelectedLink(link);
     };
 
+    const cancelDirections = () => {
+        if (routingControl) {
+            routingControl.setWaypoints([]);
+            mapRef.current.removeControl(routingControl);
+            setRoutingControl(null);
+        }
+    };
+
     return (
         <div>
             <div>
                 <div>
-                    <button onClick={() => displayByType('all')}>List all</button>
-                    <button onClick={() => displayByType('amenity')}>List amenities</button>
-                    <button onClick={() => displayByType('tourism')}>List tourism</button>
-                    <button onClick={() => displayByType('historic')}>List historic</button>
-                    <button onClick={() => displayByType('archaeological_site')}>List archaeological sites</button>
-                    <button onClick={() => displayByType('artwork')}>List artworks</button>
-                    <button onClick={() => displayByType('library')}>List libraries</button>
-                    <button onClick={() => displayByType('memorial')}>List memorials</button>
-                    <button onClick={() => displayByType('monument')}>List monuments</button>
-                    <button onClick={() => displayByType('tomb')}>List tombs</button>
-                    <button onClick={() => displayByType('worship')}>List places of worship</button>
-                    <button onClick={() => displayByType('museum')}>List museums</button>
+                    <button onClick={() => displayByType("all")}>List all</button>
+                    <button onClick={() => displayByType("amenity")}>List amenities</button>
+                    <button onClick={() => displayByType("tourism")}>List tourism</button>
+                    <button onClick={() => displayByType("historic")}>List historic</button>
+                    <button onClick={() => displayByType("archaeological_site")}>List archaeological sites</button>
+                    <button onClick={() => displayByType("artwork")}>List artworks</button>
+                    <button onClick={() => displayByType("library")}>List libraries</button>
+                    <button onClick={() => displayByType("memorial")}>List memorials</button>
+                    <button onClick={() => displayByType("monument")}>List monuments</button>
+                    <button onClick={() => displayByType("tomb")}>List tombs</button>
+                    <button onClick={() => displayByType("worship")}>List places of worship</button>
+                    <button onClick={() => displayByType("museum")}>List museums</button>
                 </div>
+
+                <button onClick={cancelDirections}>Cancel Directions</button>
 
                 <table>
                     <thead>
@@ -109,7 +167,7 @@ const List = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {state.map(item => (
+                    {state.map((item) => (
                         <tr key={item.name}>
                             <td>{item.name}</td>
                             <td>{item.type}</td>
@@ -123,7 +181,7 @@ const List = () => {
             </div>
 
             <div>
-                <div id="map" style={{ width: "100%", height: "500px" }}></div>
+                <div id="map" style={{width: "100%", height: "500px"}}></div>
             </div>
         </div>
     );
