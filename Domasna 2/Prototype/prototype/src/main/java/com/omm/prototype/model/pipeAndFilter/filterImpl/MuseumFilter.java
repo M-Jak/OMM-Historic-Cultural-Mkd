@@ -1,9 +1,11 @@
-package com.omm.prototype.model.pipeAndFilter;
+package com.omm.prototype.model.pipeAndFilter.filterImpl;
 
-public class MuseumFilter implements Filter<String>{
+import com.omm.prototype.model.pipeAndFilter.Filter;
+
+public class MuseumFilter implements Filter<String> {
     @Override
     public String execute( String input ) {
-        if(input.contains("amenity") || input.isEmpty())
+        if(input.contains("type") || input.isEmpty())
             return "";
 
         String[] parts = input.split(",", -1);

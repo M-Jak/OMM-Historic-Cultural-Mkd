@@ -1,6 +1,8 @@
-package com.omm.prototype.model.pipeAndFilter;
+package com.omm.prototype.model.pipeAndFilter.filterImpl;
 
-public class WorshipFilter implements Filter<String>{
+import com.omm.prototype.model.pipeAndFilter.Filter;
+
+public class AmenityFilter implements Filter<String> {
     @Override
     public String execute( String input ) {
         if(input.contains("type") || input.isEmpty())
@@ -8,7 +10,8 @@ public class WorshipFilter implements Filter<String>{
 
         String[] parts = input.split(",", -1);
         StringBuilder result = new StringBuilder();
-        if(parts[1].equals("place_of_worship")){
+        if(parts[1].equals("place_of_worship") || parts[1].equals("library")
+                || parts[1].equals("artwork") || parts[1].equals("museum")){
             result.append(parts[0]).append(",");
             result.append(parts[1]).append(",");
             result.append(parts[2]).append(",");
