@@ -1,12 +1,23 @@
 import React, { useEffect, useState, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import markerIconUrl from "./marker.png";
+import blueMarker from "./marker_blue.svg";
+import redMarker from "./marker_red.svg";
 
 const List = () => {
     const [state, setState] = useState([]);
     const [selectedLink, setSelectedLink] = useState(null);
     const mapRef = useRef(null);
+    const placeIcon = L.icon({
+        iconUrl: blueMarker,
+        iconSize: [32, 32],
+        popupAnchor: [0, -20],
+    });
+    const userIcon = L.icon({
+        iconUrl: redMarker,
+        iconSize: [32, 32],
+        popupAnchor: [0, -20],
+    });
 
     useEffect(() => {
         if (!mapRef.current) {
@@ -36,16 +47,10 @@ const List = () => {
                 }
             });
 
-            const markerIcon = L.icon({
-                iconUrl: markerIconUrl,
-                iconSize: [32,32],
-                popupAnchor: [0, -20],
-            });
-
             state.forEach((item) => {
                 const marker = L.marker(
                     [item.latitude, item.longitude],
-                    { icon: markerIcon }
+                    { icon: placeIcon }
                 ).addTo(mapRef.current);
                 marker
                     .bindPopup(
@@ -53,8 +58,22 @@ const List = () => {
                     )
                     .openPopup();
             });
+
+            // Add marker for the user's current location
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    const userMarker = L.marker([latitude, longitude],{icon:userIcon}).addTo(
+                        mapRef.current
+                    );
+                    userMarker.bindPopup("Your Current Location").openPopup();
+                },
+                (error) => {
+                    console.error("Error getting current location:", error.message);
+                }
+            );
         }
-    }, [state]);
+    }, [placeIcon, state, userIcon]);
 
     const displayByType = (link) => {
         setState([]);
