@@ -1,7 +1,7 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from "./Home";
-import List from "./List";
+import Map from "./Map";
 
 
 function App() {
@@ -9,8 +9,8 @@ function App() {
         <Router>
             <Routes>
                 <Route exact path="/" element={<Home/>}/>
-                <Route path='/list' exact={true}
-                       element={<List/>}/>
+                <Route path='/map' exact={true}
+                       element={<Map/>}/>
             </Routes>
         </Router>
     )

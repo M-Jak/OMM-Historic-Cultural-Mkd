@@ -6,7 +6,7 @@ import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import blueMarker from "./marker_blue.svg";
 import redMarker from "./marker_red.svg";
 
-const List = () => {
+const Map = () => {
     const [state, setState] = useState([]);
     const [selectedLink, setSelectedLink] = useState(null);
     const [routingControl, setRoutingControl] = useState(null);
@@ -187,4 +187,4 @@ const List = () => {
     );
 };
 
-export default List;
+export default Map;
