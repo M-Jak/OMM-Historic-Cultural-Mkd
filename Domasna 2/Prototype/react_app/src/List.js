@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import markerIconUrl from "./marker.png";
 
 const List = () => {
     const [state, setState] = useState([]);
@@ -10,7 +11,9 @@ const List = () => {
     useEffect(() => {
         if (!mapRef.current) {
             const newMap = L.map("map").setView([41.6086, 21.7453], 8);
-            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(newMap);
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
+                newMap
+            );
             mapRef.current = newMap;
         }
     }, []);
@@ -18,8 +21,8 @@ const List = () => {
     useEffect(() => {
         if (selectedLink) {
             fetch(`http://localhost:8080/omm/api/${selectedLink}`)
-                .then(response => response.json())
-                .then(data => {
+                .then((response) => response.json())
+                .then((data) => {
                     setState(data);
                 });
         }
@@ -27,21 +30,34 @@ const List = () => {
 
     useEffect(() => {
         if (mapRef.current && state.length > 0) {
-            mapRef.current.eachLayer(layer => {
+            mapRef.current.eachLayer((layer) => {
                 if (layer instanceof L.Marker) {
                     mapRef.current.removeLayer(layer);
                 }
             });
 
-            state.forEach(item => {
-                const marker = L.marker([item.latitude, item.longitude]).addTo(mapRef.current);
-                marker.bindPopup(`<b>Name: ${item.name}</b><br>Type: ${item.type}<br>English name: ${item.en_name}`).openPopup();
+            const markerIcon = L.icon({
+                iconUrl: markerIconUrl,
+                iconSize: [32,32],
+                popupAnchor: [0, -20],
+            });
+
+            state.forEach((item) => {
+                const marker = L.marker(
+                    [item.latitude, item.longitude],
+                    { icon: markerIcon }
+                ).addTo(mapRef.current);
+                marker
+                    .bindPopup(
+                        `<b>Name: ${item.name}</b><br>Type: ${item.type}<br>English name: ${item.en_name}`
+                    )
+                    .openPopup();
             });
         }
     }, [state]);
 
-    const displayByType = link => {
-        setState([])
+    const displayByType = (link) => {
+        setState([]);
         setSelectedLink(link);
     };
 
