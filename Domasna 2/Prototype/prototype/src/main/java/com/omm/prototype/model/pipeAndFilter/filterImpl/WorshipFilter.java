@@ -1,12 +1,16 @@
-package com.omm.prototype.model.pipeAndFilter;
+package com.omm.prototype.model.pipeAndFilter.filterImpl;
 
-public class MonumentFilter implements Filter<String> {
+import com.omm.prototype.model.pipeAndFilter.Filter;
+
+public class WorshipFilter implements Filter<String> {
     @Override
-    public String execute(String input) {
+    public String execute( String input ) {
+        if(input.contains("type") || input.isEmpty())
+            return "";
+
         String[] parts = input.split(",", -1);
         StringBuilder result = new StringBuilder();
-
-        if (parts[2].equals("monument")) {
+        if(parts[1].equals("place_of_worship")){
             result.append(parts[0]).append(",");
             result.append(parts[1]).append(",");
             result.append(parts[2]).append(",");
@@ -14,5 +18,6 @@ public class MonumentFilter implements Filter<String> {
         }
 
         return result.toString();
+
     }
 }

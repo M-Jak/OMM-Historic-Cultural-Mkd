@@ -18,7 +18,7 @@ import java.util.List;
 public class PinController {
     private final PinService service;
 
-    @GetMapping()
+    @GetMapping("/all")
     public ResponseEntity<List<Pin>> getAll(){
         return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     }

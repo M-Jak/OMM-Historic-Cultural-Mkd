@@ -1,6 +1,8 @@
-package com.omm.prototype.model.pipeAndFilter;
+package com.omm.prototype.model.pipeAndFilter.filterImpl;
 
-public class CoordsFilter implements Filter<String>{
+import com.omm.prototype.model.pipeAndFilter.Filter;
+
+public class CoordsFilter implements Filter<String> {
     @Override
     public String execute( String input ) {
         String[] parts = input.split(",");
