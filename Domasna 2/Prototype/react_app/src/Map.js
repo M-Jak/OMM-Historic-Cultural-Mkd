@@ -7,10 +7,12 @@ import blueMarker from "./marker_blue.svg";
 import redMarker from "./marker_red.svg";
 
 const Map = () => {
-    const [state, setState] = useState([]);
+    // stores info gotten from api
+    const [data, setData] = useState([]);
+    // stores which link was picked to fetch which data from api
     const [selectedLink, setSelectedLink] = useState(null);
-    const [routingControl, setRoutingControl] = useState(null);
-    const mapRef = useRef(null);
+    const [directions, setDirections] = useState(null);
+    const map = useRef(null);
     const placeIcon = L.icon({
         iconUrl: blueMarker,
         iconSize: [32, 32],
@@ -23,116 +25,102 @@ const Map = () => {
     });
 
     useEffect(() => {
-        if (!mapRef.current) {
+        if (!map.current) {
             const newMap = L.map("map").setView([41.6086, 21.7453], 8);
             L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
                 newMap
             );
-            mapRef.current = newMap;
+            map.current = newMap;
         }
     }, []);
 
     useEffect(() => {
         if (selectedLink) {
-            fetch(`http://localhost:8080/omm/api/${selectedLink}`)
+            fetch(`http://localhost:9090/omm/api/${selectedLink}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    setState(data);
+                    setData(data);
                 });
         }
     }, [selectedLink]);
 
+    // populates map with pins, populates pins with popups
     useEffect(() => {
-        if (mapRef.current && state.length > 0) {
-            mapRef.current.eachLayer((layer) => {
+        if (map.current && data.length > 0) {
+            map.current.eachLayer((layer) => {
                 if (layer instanceof L.Marker) {
-                    mapRef.current.removeLayer(layer);
+                    map.current.removeLayer(layer);
                 }
             });
 
-            state.forEach((item) => {
+            data.forEach((item) => {
                 const marker = L.marker([item.latitude, item.longitude], {
                     icon: placeIcon,
-                }).addTo(mapRef.current);
+                }).addTo(map.current);
 
-                marker
-                    .bindPopup(
-                        `<b>Name: ${item.name}</b><br>Type: ${item.type}<br>English name: ${item.en_name}`
-                    )
-                    .on("click", () => {
-                        // Generate directions from user's location to the clicked marker
-                        if (navigator.geolocation) {
-                            navigator.geolocation.getCurrentPosition(
-                                (position) => {
-                                    const {latitude, longitude} = position.coords;
-                                    const waypoints = [
-                                        L.latLng(latitude, longitude),
-                                        L.latLng(item.latitude, item.longitude),
-                                    ];
+                marker.bindPopup(
+                    `<b>Name: ${item.name}</b><br>Type: ${item.type}<br>English name: ${item.en_name}<br><button id="getDirectionsBtn">Get Directions</button>`
+                ).on("click", () => {
+                    marker.openPopup();
 
-                                    if (routingControl) {
-                                        // Clear existing routes before generating new ones
-                                        routingControl.setWaypoints(waypoints);
-                                    } else {
-                                        const control = L.Routing.control({
-                                            waypoints,
-                                            routeWhileDragging: true,
-                                            lineOptions: {
-                                                styles: [
-                                                    { color: "blue", weight: 3 },
-                                                ],
-                                            },
-                                        }).addTo(mapRef.current);
+                    const getDirectionsBtn = document.getElementById("getDirectionsBtn");
+                    // generates directions from pin user's location to the selected pin and adds them to the map
+                    if (getDirectionsBtn) {
+                        getDirectionsBtn.addEventListener("click", () => {
+                            if (navigator.geolocation) {
+                                navigator.geolocation.getCurrentPosition(
+                                    (position) => {
+                                        const { latitude, longitude } = position.coords;
+                                        const waypoints = [
+                                            L.latLng(latitude, longitude),
+                                            L.latLng(item.latitude, item.longitude),
+                                        ];
 
-                                        setRoutingControl(control);
+                                        if (directions) {
+                                            directions.setWaypoints(waypoints);
+                                        } else {
+                                            const control = L.Routing.control({
+                                                waypoints,
+                                                routeWhileDragging: true,
+                                                lineOptions: {
+                                                    styles: [{ color: "blue", weight: 3 }],
+                                                },
+                                            }).addTo(map.current);
+
+                                            setDirections(control);
+                                        }
                                     }
-                                },
-                                (error) => {
-                                    console.error(
-                                        "Error getting current location:",
-                                        error.message
-                                    );
-                                }
-                            );
-                        } else {
-                            console.error(
-                                "Geolocation is not supported by your browser"
-                            );
-                        }
-                    });
+                                );
+                            }
+                        });
+                    }
+                });
             });
-
-            // Add marker for the user's current location
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const {latitude, longitude} = position.coords;
                     const userMarker = L.marker([latitude, longitude], {
                         icon: userIcon,
-                    }).addTo(mapRef.current);
+                    }).addTo(map.current);
                     userMarker
                         .bindPopup("Your Current Location")
                         .openPopup();
-                },
-                (error) => {
-                    console.error(
-                        "Error getting current location:",
-                        error.message
-                    );
                 }
             );
         }
-    }, [placeIcon, state, userIcon, routingControl]);
+    }, [placeIcon, data, userIcon, directions]);
 
+    // clears old data so it isn't mixed with the new data
     const displayByType = (link) => {
-        setState([]);
+        setData([]);
         setSelectedLink(link);
     };
 
     const cancelDirections = () => {
-        if (routingControl) {
-            routingControl.setWaypoints([]);
-            mapRef.current.removeControl(routingControl);
-            setRoutingControl(null);
+        if (directions) {
+            directions.setWaypoints([]);
+            map.current.removeControl(directions);
+            setDirections(null);
         }
     };
 
@@ -167,7 +155,7 @@ const Map = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {state.map((item) => (
+                    {data.map((item) => (
                         <tr key={item.name}>
                             <td>{item.name}</td>
                             <td>{item.type}</td>
