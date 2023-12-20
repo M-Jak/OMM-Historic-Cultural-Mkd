@@ -24,11 +24,11 @@ public class Main {
         CoordsFilter coordsFilter=new CoordsFilter();
 
         amenityPipe.addFilter(coordsFilter);
-        amenityPipe.addFilter(new AmenityFilter());
+        amenityPipe.addFilter(new LibraryChurchFilter());
         historicPipe.addFilter(coordsFilter);
-        historicPipe.addFilter(new HistoricFilter());
+        historicPipe.addFilter(new ArcheologicFilter());
         tourismPipe.addFilter(coordsFilter);
-        tourismPipe.addFilter(new TourismFilter());
+        tourismPipe.addFilter(new MuseumArtworkFilter());
 
         List<String> fileNames=new ArrayList<>();
         fileNames.add("./resources/amenity_place_of_worship.csv");
