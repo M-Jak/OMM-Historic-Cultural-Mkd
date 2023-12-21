@@ -10,6 +10,7 @@ import redMarker from "./marker_red.svg";
 const Map = () => {
     const [data, setData] = useState([]);
     const [selectedLink, setSelectedLink] = useState(null);
+    // eslint-disable-next-line no-unused-vars
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [filterText, setFilterText] = useState("");
     const [filteredData, setFilteredData] = useState([]);
@@ -152,7 +153,7 @@ const Map = () => {
 
     return (
         <div>
-            <div className="d-flex flex-row align-items-center">
+            <div className="d-flex flex-row align-items-center top-bar">
                 <div className="mr-auto p-2">
                     <input
                         className="filter-input"
