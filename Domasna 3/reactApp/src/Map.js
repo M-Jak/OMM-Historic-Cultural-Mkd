@@ -11,6 +11,10 @@ const Map = () => {
     const [data, setData] = useState([]);
     // stores which link was picked to fetch which data from api
     const [selectedLink, setSelectedLink] = useState(null);
+    // stores the text by which to filter that the user entered
+    const [filterText, setFilterText] = useState("");
+    // stores the data received by the api
+    const [filteredData, setFilteredData] = useState([]);
     const [directions, setDirections] = useState(null);
     const map = useRef(null);
     const placeIcon = L.icon({
@@ -44,16 +48,27 @@ const Map = () => {
         }
     }, [selectedLink]);
 
+    // sends request to the api and receives the data from it
+    const handleFilter = () => {
+        fetch(`http://localhost:9090/omm/api/filter?text=${encodeURIComponent(filterText)}`)
+            .then((response) => response.json())
+            .then((data) => {
+                setFilteredData(data);
+            });
+    };
+
     // populates map with pins, populates pins with popups
     useEffect(() => {
-        if (map.current && data.length > 0) {
+        if (map.current) {
             map.current.eachLayer((layer) => {
                 if (layer instanceof L.Marker) {
                     map.current.removeLayer(layer);
                 }
             });
 
-            data.forEach((item) => {
+            const pinsToUse = filteredData.length > 0 ? filteredData : data;
+
+            pinsToUse.forEach((item) => {
                 const marker = L.marker([item.latitude, item.longitude], {
                     icon: placeIcon,
                 }).addTo(map.current);
@@ -96,6 +111,7 @@ const Map = () => {
                     }
                 });
             });
+
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const {latitude, longitude} = position.coords;
@@ -108,13 +124,24 @@ const Map = () => {
                 }
             );
         }
-    }, [placeIcon, data, userIcon, directions]);
+    }, [placeIcon, data, userIcon, directions, filteredData]);
 
     // clears old data so it isn't mixed with the new data
     const displayByType = (link) => {
         setData([]);
         setSelectedLink(link);
     };
+
+    // prevents sending empty text parameter for filter requests
+    useEffect(() => {
+        if (filterText.trim() !== "") {
+            handleFilter();
+        } else {
+            // Reset filtered data when filter text is empty
+            setFilteredData([]);
+            displayByType("all");
+        }
+    }, [filterText]);
 
     const cancelDirections = () => {
         if (directions) {
@@ -141,6 +168,13 @@ const Map = () => {
                     <button onClick={() => displayByType("worship")}>List places of worship</button>
                     <button onClick={() => displayByType("museum")}>List museums</button>
                 </div>
+                <input
+                    type="text"
+                    placeholder="Enter filter text"
+                    value={filterText}
+                    onChange={(e) => setFilterText(e.target.value)}
+                />
+                <button onClick={handleFilter}>Filter</button>
 
                 <button onClick={cancelDirections}>Cancel Directions</button>
 

@@ -23,4 +23,17 @@ public class PinServiceImpl implements PinService {
         return repository.getAllByType(type);
     }
 
+    @Override
+    public List<Pin> getAllFiltered( String text ) {
+        return repository.getAll().stream()
+                .filter(p-> {
+                    if ( p.getName().toLowerCase().contains(text.toLowerCase()) )
+                        return true;
+                    if ( p.getEn_name().toLowerCase().contains(text.toLowerCase()) )
+                        return true;
+                    return p.getType().toLowerCase().contains(text.toLowerCase());
+                })
+                .toList();
+    }
+
 }
