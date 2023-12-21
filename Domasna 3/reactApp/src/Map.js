@@ -1,19 +1,17 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import blueMarker from "./marker_blue.svg";
 import redMarker from "./marker_red.svg";
 
 const Map = () => {
-    // stores info gotten from api
     const [data, setData] = useState([]);
-    // stores which link was picked to fetch which data from api
     const [selectedLink, setSelectedLink] = useState(null);
-    // stores the text by which to filter that the user entered
+    const [selectedCategory, setSelectedCategory] = useState("all");
     const [filterText, setFilterText] = useState("");
-    // stores the data received by the api
     const [filteredData, setFilteredData] = useState([]);
     const [directions, setDirections] = useState(null);
     const map = useRef(null);
@@ -48,16 +46,24 @@ const Map = () => {
         }
     }, [selectedLink]);
 
-    // sends request to the api and receives the data from it
-    const handleFilter = () => {
-        fetch(`http://localhost:9090/omm/api/filter?text=${encodeURIComponent(filterText)}`)
+    const handleCategoryChange = (event) => {
+        const newCategory = event.target.value;
+        setSelectedCategory(newCategory);
+        displayByType(newCategory);
+    };
+
+    const handleFilter = useCallback(() => {
+        fetch(
+            `http://localhost:9090/omm/api/filter?text=${encodeURIComponent(
+                filterText
+            )}`
+        )
             .then((response) => response.json())
             .then((data) => {
                 setFilteredData(data);
             });
-    };
+    }, [filterText]);
 
-    // populates map with pins, populates pins with popups
     useEffect(() => {
         if (map.current) {
             map.current.eachLayer((layer) => {
@@ -74,74 +80,67 @@ const Map = () => {
                 }).addTo(map.current);
 
                 marker.bindPopup(
-                    `<b>Name: ${item.name}</b><br>Type: ${item.type}<br>English name: ${item.en_name}<br><button id="getDirectionsBtn">Get Directions</button>`
+                    `<b>Name: ${item.name}</b><br>Type: ${item.type}<br>English name: ${item.en_name}<br>
+                        <div class="p-2">
+                            <button id="getDirectionsBtn" class="btn btn-secondary btn-sm">Get Directions</button>
+                        </div>`
                 ).on("click", () => {
                     marker.openPopup();
 
                     const getDirectionsBtn = document.getElementById("getDirectionsBtn");
-                    // generates directions from pin user's location to the selected pin and adds them to the map
                     if (getDirectionsBtn) {
                         getDirectionsBtn.addEventListener("click", () => {
                             if (navigator.geolocation) {
-                                navigator.geolocation.getCurrentPosition(
-                                    (position) => {
-                                        const { latitude, longitude } = position.coords;
-                                        const waypoints = [
-                                            L.latLng(latitude, longitude),
-                                            L.latLng(item.latitude, item.longitude),
-                                        ];
+                                navigator.geolocation.getCurrentPosition((position) => {
+                                    const { latitude, longitude } = position.coords;
+                                    const waypoints = [
+                                        L.latLng(latitude, longitude),
+                                        L.latLng(item.latitude, item.longitude),
+                                    ];
 
-                                        if (directions) {
-                                            directions.setWaypoints(waypoints);
-                                        } else {
-                                            const control = L.Routing.control({
-                                                waypoints,
-                                                routeWhileDragging: true,
-                                                lineOptions: {
-                                                    styles: [{ color: "blue", weight: 3 }],
-                                                },
-                                            }).addTo(map.current);
+                                    if (directions) {
+                                        directions.setWaypoints(waypoints);
+                                    } else {
+                                        const control = L.Routing.control({
+                                            waypoints,
+                                            routeWhileDragging: true,
+                                            lineOptions: {
+                                                styles: [{ color: "blue", weight: 3 }],
+                                            },
+                                        }).addTo(map.current);
 
-                                            setDirections(control);
-                                        }
+                                        setDirections(control);
                                     }
-                                );
+                                });
                             }
                         });
                     }
                 });
             });
 
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const {latitude, longitude} = position.coords;
-                    const userMarker = L.marker([latitude, longitude], {
-                        icon: userIcon,
-                    }).addTo(map.current);
-                    userMarker
-                        .bindPopup("Your Current Location")
-                        .openPopup();
-                }
-            );
+            navigator.geolocation.getCurrentPosition((position) => {
+                const { latitude, longitude } = position.coords;
+                const userMarker = L.marker([latitude, longitude], {
+                    icon: userIcon,
+                }).addTo(map.current);
+                userMarker.bindPopup("Your Current Location").openPopup();
+            });
         }
     }, [placeIcon, data, userIcon, directions, filteredData]);
 
-    // clears old data so it isn't mixed with the new data
     const displayByType = (link) => {
         setData([]);
         setSelectedLink(link);
     };
 
-    // prevents sending empty text parameter for filter requests
     useEffect(() => {
         if (filterText.trim() !== "") {
             handleFilter();
         } else {
-            // Reset filtered data when filter text is empty
             setFilteredData([]);
             displayByType("all");
         }
-    }, [filterText]);
+    }, [filterText, handleFilter]);
 
     const cancelDirections = () => {
         if (directions) {
@@ -153,58 +152,47 @@ const Map = () => {
 
     return (
         <div>
-            <div>
-                <div>
-                    <button onClick={() => displayByType("all")}>List all</button>
-                    <button onClick={() => displayByType("amenity")}>List amenities</button>
-                    <button onClick={() => displayByType("tourism")}>List tourism</button>
-                    <button onClick={() => displayByType("historic")}>List historic</button>
-                    <button onClick={() => displayByType("archaeological_site")}>List archaeological sites</button>
-                    <button onClick={() => displayByType("artwork")}>List artworks</button>
-                    <button onClick={() => displayByType("library")}>List libraries</button>
-                    <button onClick={() => displayByType("memorial")}>List memorials</button>
-                    <button onClick={() => displayByType("monument")}>List monuments</button>
-                    <button onClick={() => displayByType("tomb")}>List tombs</button>
-                    <button onClick={() => displayByType("worship")}>List places of worship</button>
-                    <button onClick={() => displayByType("museum")}>List museums</button>
+            <div className="d-flex flex-row align-items-center">
+                <div className="mr-auto p-2">
+                    <input
+                        className="filter-input"
+                        type="text"
+                        placeholder="Enter filter text"
+                        value={filterText}
+                        onChange={(e) => setFilterText(e.target.value)}
+                    />
                 </div>
-                <input
-                    type="text"
-                    placeholder="Enter filter text"
-                    value={filterText}
-                    onChange={(e) => setFilterText(e.target.value)}
-                />
-                <button onClick={handleFilter}>Filter</button>
-
-                <button onClick={cancelDirections}>Cancel Directions</button>
-
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>English Name</th>
-                        <th>Latitude</th>
-                        <th>Longitude</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {data.map((item) => (
-                        <tr key={item.name}>
-                            <td>{item.name}</td>
-                            <td>{item.type}</td>
-                            <td>{item.en_name}</td>
-                            <td>{item.latitude}</td>
-                            <td>{item.longitude}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+                <div className="p-2">
+                    <select
+                        className="form-control"
+                        onChange={handleCategoryChange}
+                    >
+                        <option value="all">None</option>
+                        <option value="amenity">Amenities</option>
+                        <option value="tourism">Tourism</option>
+                        <option value="historic">Historic</option>
+                        <option value="archaeological_site">Archaeological Sites</option>
+                        <option value="artwork">Artworks</option>
+                        <option value="library">Libraries</option>
+                        <option value="memorial">Memorials</option>
+                        <option value="monument">Monuments</option>
+                        <option value="tomb">Tombs</option>
+                        <option value="worship">Places of Worship</option>
+                        <option value="museum">Museums</option>
+                    </select>
+                </div>
+                <div className="p-2">
+                    <button className="filter-button" onClick={handleFilter}>
+                        Filter
+                    </button>
+                </div>
+                <div className="p-2">
+                    <button className="cancel-button" onClick={cancelDirections}>
+                        Cancel Directions
+                    </button>
+                </div>
             </div>
-
-            <div>
-                <div id="map" style={{width: "100%", height: "500px"}}></div>
-            </div>
+            <div id="map" className="map-container"></div>
         </div>
     );
 };
