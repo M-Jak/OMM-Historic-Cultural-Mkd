@@ -9,9 +9,8 @@ import redMarker from "./marker_red.svg";
 
 const Map = () => {
     const [data, setData] = useState([]);
-    const [selectedLink, setSelectedLink] = useState(null);
-    // eslint-disable-next-line no-unused-vars
     const [selectedCategory, setSelectedCategory] = useState("all");
+    // eslint-disable-next-line no-unused-vars
     const [filterText, setFilterText] = useState("");
     const [filteredData, setFilteredData] = useState([]);
     const [directions, setDirections] = useState(null);
@@ -38,14 +37,14 @@ const Map = () => {
     }, []);
 
     useEffect(() => {
-        if (selectedLink) {
-            fetch(`http://localhost:9090/omm/api/${selectedLink}`)
+        if (selectedCategory) {
+            fetch(`http://localhost:9090/omm/api/${selectedCategory}`)
                 .then((response) => response.json())
                 .then((data) => {
                     setData(data);
                 });
         }
-    }, [selectedLink]);
+    }, [selectedCategory]);
 
     const handleCategoryChange = (event) => {
         const newCategory = event.target.value;
@@ -54,11 +53,14 @@ const Map = () => {
     };
 
     const handleFilter = useCallback(() => {
-        fetch(
-            `http://localhost:9090/omm/api/filter?text=${encodeURIComponent(
-                filterText
-            )}`
-        )
+        let apiUrl = `http://localhost:9090/omm/api/filter?text=${encodeURIComponent(filterText)}`;
+
+        if (selectedCategory) {
+            apiUrl += `&type=${encodeURIComponent(selectedCategory)}`;
+        }
+        console.log("API URL:", apiUrl); // Print the API URL for debugging
+        console.log("category", selectedCategory);
+        fetch(apiUrl)
             .then((response) => response.json())
             .then((data) => {
                 setFilteredData(data);
@@ -74,7 +76,6 @@ const Map = () => {
             });
 
             const pinsToUse = filteredData.length > 0 ? filteredData : data;
-
             pinsToUse.forEach((item) => {
                 const marker = L.marker([item.latitude, item.longitude], {
                     icon: placeIcon,
@@ -131,7 +132,7 @@ const Map = () => {
 
     const displayByType = (link) => {
         setData([]);
-        setSelectedLink(link);
+        setSelectedCategory(link);
     };
 
     useEffect(() => {
@@ -182,11 +183,11 @@ const Map = () => {
                         <option value="museum">Museums</option>
                     </select>
                 </div>
-                <div className="p-2">
-                    <button className="filter-button" onClick={handleFilter}>
-                        Filter
-                    </button>
-                </div>
+                {/*<div className="p-2">*/}
+                {/*    <button className="filter-button" onClick={handleFilter}>*/}
+                {/*        Filter*/}
+                {/*    </button>*/}
+                {/*</div>*/}
                 <div className="p-2">
                     <button className="cancel-button" onClick={cancelDirections}>
                         Cancel Directions
