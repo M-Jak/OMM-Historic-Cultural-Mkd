@@ -26,4 +26,10 @@ public class PinController {
         return new ResponseEntity<>(service.getAllByType(type),HttpStatus.OK);
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<List<Pin>> getAllWithFilter(@RequestParam String text, @RequestParam(required=false) String type){
+        List<Pin> pins = service.getAllFiltered(text, type);
+        return new ResponseEntity<>(pins,HttpStatus.OK);
+    }
+
 }
