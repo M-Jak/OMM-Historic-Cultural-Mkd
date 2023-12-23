@@ -30,8 +30,6 @@ public class PinRepository {
     private final Filter<String> historicFilter = new HistoricFilter();
     private final Filter<String> amenityFilter = new AmenityFilter();
     private final Filter<String> museumFilter = new MuseumFilter();
-    @Value ("${prototype.custom.datalocation}")
-    private String dataLocation;
 
     private List<Pin> processScannerInput(Pipe<String> pipe) throws IOException {
         InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("database/data.csv");
