@@ -67,7 +67,7 @@ const Map = () => {
             .then((data) => {
                 setFilteredData(data);
             });
-    }, [selectedCategory, filterText]);
+    }, [filterText]);
 
     useEffect(() => {
         if (map.current) {
