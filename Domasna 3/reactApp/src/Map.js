@@ -8,6 +8,8 @@ import blueMarker from "./marker_blue.svg";
 import redMarker from "./marker_red.svg";
 
 const Map = () => {
+    const url = "https://prototype.jollycoast-8d47174b.westeurope.azurecontainerapps.io/omm/api/"
+    //const url = "localhost:9090/omm/api/";
     const [data, setData] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("all");
     // eslint-disable-next-line no-unused-vars
@@ -38,7 +40,7 @@ const Map = () => {
 
     useEffect(() => {
         if (selectedCategory) {
-            fetch(`http://localhost:9090/omm/api/${selectedCategory}`)
+            fetch(`${url}${selectedCategory}`)
                 .then((response) => response.json())
                 .then((data) => {
                     setData(data);
@@ -53,7 +55,7 @@ const Map = () => {
     };
 
     const handleFilter = useCallback(() => {
-        let apiUrl = `http://localhost:9090/omm/api/filter?text=${encodeURIComponent(filterText)}`;
+        let apiUrl = `${url}filter?text=${encodeURIComponent(filterText)}`;
 
         if (selectedCategory) {
             apiUrl += `&type=${encodeURIComponent(selectedCategory)}`;
@@ -65,7 +67,7 @@ const Map = () => {
             .then((data) => {
                 setFilteredData(data);
             });
-    }, [filterText]);
+    }, [selectedCategory, filterText]);
 
     useEffect(() => {
         if (map.current) {
