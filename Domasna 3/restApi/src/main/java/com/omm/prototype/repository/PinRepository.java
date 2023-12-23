@@ -3,10 +3,15 @@ package com.omm.prototype.repository;
 import com.omm.prototype.model.Pin;
 import com.omm.prototype.model.pipeAndFilter.*;
 import com.omm.prototype.model.pipeAndFilter.filterImpl.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -25,9 +30,14 @@ public class PinRepository {
     private final Filter<String> historicFilter = new HistoricFilter();
     private final Filter<String> amenityFilter = new AmenityFilter();
     private final Filter<String> museumFilter = new MuseumFilter();
+    @Value ("${prototype.custom.datalocation}")
+    private String dataLocation;
 
-    private List<Pin> processScannerInput(Pipe<String> pipe) throws FileNotFoundException {
-        Scanner s = new Scanner(new File("src/main/resources/database/data.csv"));
+    private List<Pin> processScannerInput(Pipe<String> pipe) throws IOException {
+        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("database/data.csv");
+
+        assert inputStream != null;
+        Scanner s = new Scanner(inputStream);
         List<Pin> pins = new ArrayList<>();
         while (s.hasNextLine()) {
             String input = pipe.runFilters(s.nextLine());
@@ -47,7 +57,7 @@ public class PinRepository {
         try {
             pins = processScannerInput(allPipe);
         }
-        catch(FileNotFoundException e){
+        catch( IOException e){
             System.out.println("data.csv could not be found");
         }
         return pins;
@@ -74,9 +84,9 @@ public class PinRepository {
         try {
             pins = processScannerInput(typePipe);
         }
-        catch(FileNotFoundException e){
+        catch( IOException e){
             System.out.println("data.csv could not be found");
-            System.exit(1);
+            //System.exit(1);
         }           return pins;
     }
 }
