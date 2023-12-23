@@ -54,20 +54,20 @@ const Map = () => {
         displayByType(newCategory);
     };
 
-    const handleFilter = useCallback(() => {
-        let apiUrl = `${url}filter?text=${encodeURIComponent(filterText)}`;
-
-        if (selectedCategory) {
-            apiUrl += `&type=${encodeURIComponent(selectedCategory)}`;
-        }
-        console.log("API URL:", apiUrl); // Print the API URL for debugging
-        console.log("category", selectedCategory);
-        fetch(apiUrl)
-            .then((response) => response.json())
-            .then((data) => {
-                setFilteredData(data);
-            });
-    }, [filterText]);
+    // const handleFilter = useCallback(() => {
+    //     let apiUrl = `${url}filter?text=${encodeURIComponent(filterText)}`;
+    //
+    //     if (selectedCategory) {
+    //         apiUrl += `&type=${encodeURIComponent(selectedCategory)}`;
+    //     }
+    //     console.log("API URL:", apiUrl); // Print the API URL for debugging
+    //     console.log("category", selectedCategory);
+    //     fetch(apiUrl)
+    //         .then((response) => response.json())
+    //         .then((data) => {
+    //             setFilteredData(data);
+    //         });
+    // }, [filterText, selectedCategory]);
 
     useEffect(() => {
         if (map.current) {
@@ -138,13 +138,19 @@ const Map = () => {
     };
 
     useEffect(() => {
-        if (filterText.trim() !== "") {
-            handleFilter();
-        } else {
-            setFilteredData([]);
-            displayByType("all");
+        let apiUrl = `${url}filter?text=${encodeURIComponent(filterText)}`;
+
+        if (selectedCategory) {
+            apiUrl += `&type=${encodeURIComponent(selectedCategory)}`;
         }
-    }, [filterText, handleFilter]);
+        console.log("API URL:", apiUrl);
+
+        fetch(apiUrl)
+            .then((response) => response.json())
+            .then((data) => {
+                setFilteredData(data);
+            });
+    }, [filterText, selectedCategory]);
 
     const cancelDirections = () => {
         if (directions) {
