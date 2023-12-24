@@ -11,7 +11,7 @@ import {Link} from "react-router-dom";
 
 
 const Map = () => {
-    const url = "https://prototype.jollycoast-8d47174b.westeurope.azurecontainerapps.io/omm/api/"
+    const url = "https://ommrestapi.redglacier-2cae781d.westeurope.azurecontainerapps.io/omm/api/"
     //const url = "localhost:9090/omm/api/";
     const [data, setData] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("all");

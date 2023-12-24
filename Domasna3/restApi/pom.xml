@@ -59,9 +59,9 @@
 		        <version>1.18.0</version>
 		        <configuration>
 		            <subscriptionId>576fc571-f66d-4582-ae4b-ce91a7a1645d</subscriptionId>
-		            <resourceGroup>dians-group</resourceGroup>
-		            <clusterName>dians-service</clusterName>
-		            <appName>prototype</appName>
+		            <resourceGroup>dians-restapi</resourceGroup>
+		            <clusterName>omm-rest-api</clusterName>
+		            <appName>ommrestapi</appName>
 		            <isPublic>true</isPublic>
 		            <deployment>
 		                <cpu>1</cpu>
