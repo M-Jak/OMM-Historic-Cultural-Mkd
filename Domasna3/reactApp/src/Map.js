@@ -173,7 +173,7 @@ const Map = () => {
                         className="form-control"
                         onChange={handleCategoryChange}
                     >
-                        <option value="all">None</option>
+                        <option value="all">All</option>
                         <option value="amenity">Amenities</option>
                         <option value="tourism">Tourism</option>
                         <option value="historic">Historic</option>
