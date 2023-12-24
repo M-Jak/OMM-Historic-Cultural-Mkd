@@ -6,6 +6,7 @@ import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import blueMarker from "./marker_blue.svg";
 import redMarker from "./marker_red.svg";
+import {Link} from "react-router-dom";
 
 const Map = () => {
     const url = "https://prototype.jollycoast-8d47174b.westeurope.azurecontainerapps.io/omm/api/"
@@ -152,7 +153,9 @@ const Map = () => {
             map.current.removeControl(directions);
             setDirections(null);
         }
+
     };
+
 
     return (
         <div>
@@ -166,6 +169,7 @@ const Map = () => {
                         onChange={(e) => setFilterText(e.target.value)}
                     />
                 </div>
+
                 <div className="p-2">
                     <select
                         className="form-control"
@@ -185,15 +189,14 @@ const Map = () => {
                         <option value="museum">Museums</option>
                     </select>
                 </div>
-                {/*<div className="p-2">*/}
-                {/*    <button className="filter-button" onClick={handleFilter}>*/}
-                {/*        Filter*/}
-                {/*    </button>*/}
-                {/*</div>*/}
+
                 <div className="p-2">
                     <button className="cancel-button" onClick={cancelDirections}>
                         Cancel Directions
                     </button>
+                </div>
+                <div className="p-2 position-fixed top-0 end-0">
+                    <Link to="/AboutUs"><button className="cancel-button" >About Us</button></Link>
                 </div>
             </div>
             <div id="map" className="map-container"></div>
