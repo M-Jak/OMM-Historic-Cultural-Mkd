@@ -8,10 +8,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.omm</groupId>
-	<artifactId>prototype</artifactId>
+	<artifactId>OMMRestApi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>prototype</name>
-	<description>Demo project for Spring Boot</description>
+	<name>OMMRestApi</name>
+	<description>Restful API for OMM web app</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
