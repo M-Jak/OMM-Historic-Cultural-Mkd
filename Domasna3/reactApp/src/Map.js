@@ -57,21 +57,6 @@ const Map = () => {
         displayByType(newCategory);
     };
 
-    // const handleFilter = useCallback(() => {
-    //     let apiUrl = `${url}filter?text=${encodeURIComponent(filterText)}`;
-    //
-    //     if (selectedCategory) {
-    //         apiUrl += `&type=${encodeURIComponent(selectedCategory)}`;
-    //     }
-    //     console.log("API URL:", apiUrl); // Print the API URL for debugging
-    //     console.log("category", selectedCategory);
-    //     fetch(apiUrl)
-    //         .then((response) => response.json())
-    //         .then((data) => {
-    //             setFilteredData(data);
-    //         });
-    // }, [filterText, selectedCategory]);
-
     useEffect(() => {
         if (map.current) {
             map.current.eachLayer((layer) => {
@@ -168,7 +153,7 @@ const Map = () => {
     return (
         <div>
             <div className="d-flex flex-row align-items-center top-bar">
-                <div className="p-2" style={{ fontSize: "18px" }}>
+                <div className="p-2" style={{fontSize: "18px"}}>
                     OMM Historic and Cultural Locations
                 </div>
                 <div className="mr-auto p-2">
@@ -179,6 +164,9 @@ const Map = () => {
                         value={filterText}
                         onChange={(e) => setFilterText(e.target.value)}
                     />
+                </div>
+                <div className="p-2">
+                    Category:
                 </div>
                 <div className="p-2">
                     <select
