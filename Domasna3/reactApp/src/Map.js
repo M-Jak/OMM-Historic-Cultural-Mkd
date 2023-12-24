@@ -168,6 +168,9 @@ const Map = () => {
     return (
         <div>
             <div className="d-flex flex-row align-items-center top-bar">
+                <div className="p-2" style={{ fontSize: "18px" }}>
+                    OMM Historic and Cultural Locations
+                </div>
                 <div className="mr-auto p-2">
                     <input
                         className="filter-input"
@@ -177,7 +180,6 @@ const Map = () => {
                         onChange={(e) => setFilterText(e.target.value)}
                     />
                 </div>
-
                 <div className="p-2">
                     <select
                         className="form-control"
@@ -197,14 +199,15 @@ const Map = () => {
                         <option value="museum">Museums</option>
                     </select>
                 </div>
-
                 <div className="p-2">
                     <button className="cancel-button" onClick={cancelDirections}>
                         Cancel Directions
                     </button>
                 </div>
                 <div className="p-2 position-fixed top-0 end-0">
-                    <Link to="/AboutUs"><button className="cancel-button" >About Us</button></Link>
+                    <Link to="/AboutUs">
+                        <button className="cancel-button">About Us</button>
+                    </Link>
                 </div>
             </div>
             <div id="map" className="map-container"></div>
