@@ -42,11 +42,11 @@
     height: 420px;
 }
 
-h2 {
+.NaslovNaParagraf {
     color: #333;
 }
 
-p {
+.opis {
     color: #666;
     white-space: pre-line;
     margin-bottom: 10px;
