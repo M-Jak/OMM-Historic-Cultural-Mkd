@@ -1,17 +1,19 @@
-FROM node:20.11.0-alpine3.18
+FROM node:lts AS builder
 
 COPY . /reactApp
 
 WORKDIR /reactApp
 
+COPY package*.json ./
 
 RUN npm install
 
-
 COPY . .
 
+RUN npm run build
 
-EXPOSE 9091
 
+from nginx:1.25
+COPY --from=builder /reactApp/build /usr/share/nginx/html/
 
-CMD ["npm", "start"]
+# CMD ["nginx", "-g", "daemon off;"]

@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  frontend:
+    build: ./reactApp
+    ports: ['9091:80']
+  backend:
+    build: ./restApi
+    ports: ['9090:5000'] 
+  proxy:
+    build: ./proxy
+    ports: ['9000:80']
+    
+
