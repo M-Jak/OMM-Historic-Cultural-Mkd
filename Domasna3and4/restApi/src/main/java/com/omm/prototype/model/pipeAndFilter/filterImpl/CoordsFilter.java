@@ -26,7 +26,7 @@ public class CoordsFilter implements Filter<String> {
                     .replace(")", "")
                     .split("\\s++");
         }
-        else {
+        else { // if it contains "POLYGON"
             String test = coords.replace("))\"", "");
             test = test.strip();
             lonLat=test.split("\\s++");

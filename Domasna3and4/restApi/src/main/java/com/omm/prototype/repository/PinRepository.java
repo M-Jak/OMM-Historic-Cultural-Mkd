@@ -1,15 +1,11 @@
 package com.omm.prototype.repository;
 
 import com.omm.prototype.model.Pin;
-import com.omm.prototype.model.pipeAndFilter.*;
+import com.omm.prototype.model.pipeAndFilter.Filter;
+import com.omm.prototype.model.pipeAndFilter.Pipe;
 import com.omm.prototype.model.pipeAndFilter.filterImpl.*;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Repository;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -103,7 +99,7 @@ public class PinRepository {
         }
         catch( IOException e){
             System.out.println("data.csv could not be found");
-            //System.exit(1);
-        }           return pins;
+        }
+        return pins;
     }
 }
