@@ -1,7 +1,6 @@
 package com.omm.prototype.repository;
 
 import com.omm.prototype.model.Pin;
-import com.omm.prototype.model.pipeAndFilter.Filter;
 import com.omm.prototype.model.pipeAndFilter.Pipe;
 import com.omm.prototype.model.pipeAndFilter.filterImpl.*;
 import org.springframework.stereotype.Repository;
