@@ -31,6 +31,14 @@ public class PinRepository {
     private final Filter<String> amenityFilter = new AmenityFilter();
     private final Filter<String> museumFilter = new MuseumFilter();
 
+    /**
+     * Processes the input from a scanner using the specified pipe of filters.
+     * Reads input from the data.csv file, applies the filters in the provided pipe,
+     * constructs Pin objects from the filtered input, and returns a list of Pins.
+     * @param pipe The pipe containing filters to apply to the input.
+     * @return A list of Pin objects constructed from the filtered input.
+     * @throws IOException if an I/O error occurs while reading the data.csv file.
+     */
     private List<Pin> processScannerInput(Pipe<String> pipe) throws IOException {
         InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("database/data.csv");
 
@@ -48,6 +56,11 @@ public class PinRepository {
         return pins;
     }
 
+    /**
+     * Retrieves all pins.
+     * Applies coordinate filtering to all pins.
+     * @return A list of all pins stored in the database.
+     */
     public List<Pin> getAll() {
         Pipe<String> allPipe = new Pipe<>();
         allPipe.addFilter(coordsFilter);
@@ -61,6 +74,12 @@ public class PinRepository {
         return pins;
     }
 
+    /**
+     * Retrieves all pins of a specific type.
+     * Applies coordinate filtering and type-specific filtering to the pins.
+     * @param type The type of pins to retrieve.
+     * @return A list of pins of the specified type stored in the database.
+     */
     public List<Pin> getAllByType(String type) {
         Pipe<String> typePipe = new Pipe<>();
         typePipe.addFilter(coordsFilter);
