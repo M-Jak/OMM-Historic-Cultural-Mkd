@@ -1,6 +1,6 @@
-package com.omm.prototype.service;
+package com.omm.api.service;
 
-import com.omm.prototype.model.Pin;
+import com.omm.api.model.Pin;
 
 import java.util.List;
 

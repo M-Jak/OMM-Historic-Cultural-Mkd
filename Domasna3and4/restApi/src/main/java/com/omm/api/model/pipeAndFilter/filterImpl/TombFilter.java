@@ -1,17 +1,17 @@
-package com.omm.prototype.model.pipeAndFilter.filterImpl;
+package com.omm.api.model.pipeAndFilter.filterImpl;
 
-import com.omm.prototype.model.pipeAndFilter.Filter;
+import com.omm.api.model.pipeAndFilter.Filter;
 
-public class WorshipFilter implements Filter<String> {
-    private static WorshipFilter instance;
+public class TombFilter implements Filter<String> {
+    private static TombFilter instance;
 
-    private WorshipFilter() {
+    private TombFilter() {
     }
 
-    public static WorshipFilter getInstance() {
-            synchronized (WorshipFilter.class) {
+    public static TombFilter getInstance() {
+            synchronized (TombFilter.class) {
                 if (instance == null) {
-                    instance = new WorshipFilter();
+                    instance = new TombFilter();
                 }
             }
         return instance;
@@ -24,7 +24,8 @@ public class WorshipFilter implements Filter<String> {
 
         String[] parts = input.split(",", -1);
         StringBuilder result = new StringBuilder();
-        if (parts[1].equals("place_of_worship")) {
+
+        if (parts[1].equals("tomb")) {
             result.append(parts[0]).append(",");
             result.append(parts[1]).append(",");
             result.append(parts[2]).append(",");

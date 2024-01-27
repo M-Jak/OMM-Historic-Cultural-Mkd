@@ -1,6 +1,6 @@
-package com.omm.prototype.model.pipeAndFilter.filterImpl;
+package com.omm.api.model.pipeAndFilter.filterImpl;
 
-import com.omm.prototype.model.pipeAndFilter.Filter;
+import com.omm.api.model.pipeAndFilter.Filter;
 
 public class HistoricFilter implements Filter<String> {
     private static HistoricFilter instance;

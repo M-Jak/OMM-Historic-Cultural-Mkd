@@ -1,7 +1,7 @@
-package com.omm.prototype.web;
+package com.omm.api.web;
 
-import com.omm.prototype.model.Pin;
-import com.omm.prototype.service.PinService;
+import com.omm.api.model.Pin;
+import com.omm.api.service.PinService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

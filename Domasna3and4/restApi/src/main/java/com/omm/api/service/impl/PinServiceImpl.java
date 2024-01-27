@@ -1,8 +1,8 @@
-package com.omm.prototype.service.impl;
+package com.omm.api.service.impl;
 
-import com.omm.prototype.model.Pin;
-import com.omm.prototype.repository.PinRepository;
-import com.omm.prototype.service.PinService;
+import com.omm.api.model.Pin;
+import com.omm.api.repository.PinRepository;
+import com.omm.api.service.PinService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

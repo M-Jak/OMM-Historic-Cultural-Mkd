@@ -1,17 +1,17 @@
-package com.omm.prototype.model.pipeAndFilter.filterImpl;
+package com.omm.api.model.pipeAndFilter.filterImpl;
 
-import com.omm.prototype.model.pipeAndFilter.Filter;
+import com.omm.api.model.pipeAndFilter.Filter;
 
-public class MemorialFilter implements Filter<String> {
-    private static MemorialFilter instance;
+public class ArtworkFilter implements Filter<String> {
+    private static ArtworkFilter instance;
 
-    private MemorialFilter() {
+    private ArtworkFilter() {
     }
 
-    public static MemorialFilter getInstance() {
-            synchronized (MemorialFilter.class) {
+    public static ArtworkFilter getInstance() {
+            synchronized (ArtworkFilter.class) {
                 if (instance == null) {
-                    instance = new MemorialFilter();
+                    instance = new ArtworkFilter();
                 }
             }
         return instance;
@@ -25,13 +25,12 @@ public class MemorialFilter implements Filter<String> {
         String[] parts = input.split(",", -1);
         StringBuilder result = new StringBuilder();
 
-        if (parts[1].equals("memorial")) {
+        if (parts[1].equals("artwork")) {
             result.append(parts[0]).append(",");
             result.append(parts[1]).append(",");
             result.append(parts[2]).append(",");
             result.append(parts[3]);
         }
-
         return result.toString();
     }
 }

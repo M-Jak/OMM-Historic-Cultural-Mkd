@@ -1,4 +1,4 @@
-package com.omm.prototype.model;
+package com.omm.api.model;
 
 
 import lombok.Data;

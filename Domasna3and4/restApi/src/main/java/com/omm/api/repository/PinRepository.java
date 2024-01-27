@@ -1,8 +1,8 @@
-package com.omm.prototype.repository;
+package com.omm.api.repository;
 
-import com.omm.prototype.model.Pin;
-import com.omm.prototype.model.pipeAndFilter.Pipe;
-import com.omm.prototype.model.pipeAndFilter.filterImpl.*;
+import com.omm.api.model.Pin;
+import com.omm.api.model.pipeAndFilter.Pipe;
+import com.omm.api.model.pipeAndFilter.filterImpl.*;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;

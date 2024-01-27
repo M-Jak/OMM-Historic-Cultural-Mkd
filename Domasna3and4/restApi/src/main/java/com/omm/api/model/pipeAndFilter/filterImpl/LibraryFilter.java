@@ -1,17 +1,17 @@
-package com.omm.prototype.model.pipeAndFilter.filterImpl;
+package com.omm.api.model.pipeAndFilter.filterImpl;
 
-import com.omm.prototype.model.pipeAndFilter.Filter;
+import com.omm.api.model.pipeAndFilter.Filter;
 
-public class TombFilter implements Filter<String> {
-    private static TombFilter instance;
+public class LibraryFilter implements Filter<String> {
+    private static LibraryFilter instance;
 
-    private TombFilter() {
+    private LibraryFilter() {
     }
 
-    public static TombFilter getInstance() {
-            synchronized (TombFilter.class) {
+    public static LibraryFilter getInstance() {
+            synchronized (LibraryFilter.class) {
                 if (instance == null) {
-                    instance = new TombFilter();
+                    instance = new LibraryFilter();
                 }
             }
         return instance;
@@ -24,14 +24,12 @@ public class TombFilter implements Filter<String> {
 
         String[] parts = input.split(",", -1);
         StringBuilder result = new StringBuilder();
-
-        if (parts[1].equals("tomb")) {
+        if (parts[1].equals("library")) {
             result.append(parts[0]).append(",");
             result.append(parts[1]).append(",");
             result.append(parts[2]).append(",");
             result.append(parts[3]);
         }
-
         return result.toString();
     }
 }

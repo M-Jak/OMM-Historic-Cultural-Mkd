@@ -1,4 +1,4 @@
-package com.omm.prototype.model.pipeAndFilter;
+package com.omm.api.model.pipeAndFilter;
 
 public interface Filter<T> {
     /**
