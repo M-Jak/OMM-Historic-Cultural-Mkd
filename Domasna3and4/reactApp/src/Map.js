@@ -13,7 +13,6 @@ import {Link} from "react-router-dom";
 const Map = () => {
     const apiHost = process.env.REACT_APP_API_HOST;
     const url = `${apiHost}/omm/api/`;
-    // const url = "localhost:9090/omm/api/";
     const [data, setData] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("all");
     // eslint-disable-next-line no-unused-vars
@@ -32,7 +31,8 @@ const Map = () => {
         popupAnchor: [0, -20],
     });
 
-    useEffect(() => {
+    useEffect(
+        function loadMap(){
         if (!map.current) {
             const newMap = L.map("map").setView([41.6086, 21.7453], 8);
             L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
@@ -42,7 +42,8 @@ const Map = () => {
         }
     }, []);
 
-    useEffect(() => {
+    useEffect(
+        function fetchDataFromApi(){
         if (selectedCategory) {
             fetch(`${url}${selectedCategory}`)
                 .then((response) => response.json())
@@ -58,7 +59,8 @@ const Map = () => {
         displayByType(newCategory);
     };
 
-    useEffect(() => {
+    useEffect(
+        function placePinsOnMap(){
         if (map.current) {
             map.current.eachLayer((layer) => {
                 if (layer instanceof L.Marker) {
@@ -126,7 +128,8 @@ const Map = () => {
         setSelectedCategory(link);
     };
 
-    useEffect(() => {
+    useEffect(
+        function getFilteredData() {
         let apiUrl = `${url}filter?text=${encodeURIComponent(filterText)}`;
 
         if (selectedCategory) {
