@@ -3,15 +3,11 @@ package com.omm.prototype.model.pipeAndFilter.filterImpl;
 import com.omm.prototype.model.pipeAndFilter.Filter;
 
 public class TombFilter implements Filter<String> {
-    // Static instance variable for singleton
     private static TombFilter instance;
 
-    // Private constructor to prevent instantiation
     private TombFilter() {
-        // Optional: Initialization code if needed
     }
 
-    // Static method to get the singleton instance
     public static TombFilter getInstance() {
             synchronized (TombFilter.class) {
                 if (instance == null) {

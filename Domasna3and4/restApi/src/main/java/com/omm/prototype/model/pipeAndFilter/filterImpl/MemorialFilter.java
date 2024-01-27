@@ -3,15 +3,11 @@ package com.omm.prototype.model.pipeAndFilter.filterImpl;
 import com.omm.prototype.model.pipeAndFilter.Filter;
 
 public class MemorialFilter implements Filter<String> {
-    // Static instance variable for singleton
     private static MemorialFilter instance;
 
-    // Private constructor to prevent instantiation
     private MemorialFilter() {
-        // Optional: Initialization code if needed
     }
 
-    // Static method to get the singleton instance
     public static MemorialFilter getInstance() {
             synchronized (MemorialFilter.class) {
                 if (instance == null) {

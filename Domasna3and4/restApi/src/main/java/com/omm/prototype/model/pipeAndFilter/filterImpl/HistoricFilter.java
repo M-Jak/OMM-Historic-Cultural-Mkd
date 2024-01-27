@@ -3,15 +3,11 @@ package com.omm.prototype.model.pipeAndFilter.filterImpl;
 import com.omm.prototype.model.pipeAndFilter.Filter;
 
 public class HistoricFilter implements Filter<String> {
-    // Static instance variable for singleton
     private static HistoricFilter instance;
 
-    // Private constructor to prevent instantiation
     private HistoricFilter() {
-        // Optional: Initialization code if needed
     }
 
-    // Static method to get the singleton instance
     public static HistoricFilter getInstance() {
             synchronized (HistoricFilter.class) {
                 if (instance == null) {

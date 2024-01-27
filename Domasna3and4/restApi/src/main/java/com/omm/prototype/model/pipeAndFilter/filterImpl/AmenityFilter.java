@@ -3,15 +3,11 @@ package com.omm.prototype.model.pipeAndFilter.filterImpl;
 import com.omm.prototype.model.pipeAndFilter.Filter;
 
 public class AmenityFilter implements Filter<String> {
-    // Static instance variable for singleton
     private static AmenityFilter instance;
 
-    // Private constructor to prevent instantiation
     private AmenityFilter() {
-        // Optional: Initialization code if needed
     }
 
-    // Static method to get the singleton instance
     public static AmenityFilter getInstance() {
             synchronized (AmenityFilter.class) {
                 if (instance == null) {

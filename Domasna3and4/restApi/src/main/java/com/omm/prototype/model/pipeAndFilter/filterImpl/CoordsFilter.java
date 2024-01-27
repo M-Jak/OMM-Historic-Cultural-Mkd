@@ -3,15 +3,11 @@ package com.omm.prototype.model.pipeAndFilter.filterImpl;
 import com.omm.prototype.model.pipeAndFilter.Filter;
 
 public class CoordsFilter implements Filter<String> {
-    // Static instance variable for singleton
     private static CoordsFilter instance;
 
-    // Private constructor to prevent instantiation
     private CoordsFilter() {
-        // Optional: Initialization code if needed
     }
 
-    // Static method to get the singleton instance
     public static CoordsFilter getInstance() {
             synchronized (CoordsFilter.class) {
                 if (instance == null) {

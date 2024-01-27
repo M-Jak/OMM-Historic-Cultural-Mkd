@@ -3,15 +3,11 @@ package com.omm.prototype.model.pipeAndFilter.filterImpl;
 import com.omm.prototype.model.pipeAndFilter.Filter;
 
 public class LibraryFilter implements Filter<String> {
-    // Static instance variable for singleton
     private static LibraryFilter instance;
 
-    // Private constructor to prevent instantiation
     private LibraryFilter() {
-        // Optional: Initialization code if needed
     }
 
-    // Static method to get the singleton instance
     public static LibraryFilter getInstance() {
             synchronized (LibraryFilter.class) {
                 if (instance == null) {

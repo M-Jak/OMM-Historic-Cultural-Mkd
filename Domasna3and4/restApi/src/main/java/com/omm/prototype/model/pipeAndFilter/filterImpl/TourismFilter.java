@@ -3,15 +3,11 @@ package com.omm.prototype.model.pipeAndFilter.filterImpl;
 import com.omm.prototype.model.pipeAndFilter.Filter;
 
 public class TourismFilter implements Filter<String> {
-    // Static instance variable for singleton
     private static TourismFilter instance;
 
-    // Private constructor to prevent instantiation
     private TourismFilter() {
-        // Optional: Initialization code if needed
     }
 
-    // Static method to get the singleton instance
     public static TourismFilter getInstance() {
             synchronized (TourismFilter.class) {
                 if (instance == null) {
