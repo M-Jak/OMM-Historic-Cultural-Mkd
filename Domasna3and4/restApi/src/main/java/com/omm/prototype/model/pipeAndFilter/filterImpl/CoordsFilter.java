@@ -3,33 +3,50 @@ package com.omm.prototype.model.pipeAndFilter.filterImpl;
 import com.omm.prototype.model.pipeAndFilter.Filter;
 
 public class CoordsFilter implements Filter<String> {
+    // Static instance variable for singleton
+    private static CoordsFilter instance;
+
+    // Private constructor to prevent instantiation
+    private CoordsFilter() {
+        // Optional: Initialization code if needed
+    }
+
+    // Static method to get the singleton instance
+    public static CoordsFilter getInstance() {
+            synchronized (CoordsFilter.class) {
+                if (instance == null) {
+                    instance = new CoordsFilter();
+                }
+            }
+        return instance;
+    }
+
     @Override
-    public String execute( String input ) {
+    public String execute(String input) {
         String[] parts = input.split(",");
-        if(parts[parts.length-1].equals("WKT"))
+        if (parts[parts.length - 1].equals("WKT"))
             return "";
-        String coords = parts[parts.length-1];
-        StringBuilder result =new StringBuilder();
+        String coords = parts[parts.length - 1];
+        StringBuilder result = new StringBuilder();
         String[] lonLat;
-        if(coords.contains("POINT")){
-            lonLat=coords.replace("POINT (", "")
+        if (coords.contains("POINT")) {
+            lonLat = coords.replace("POINT (", "")
                     .replace(")", "")
                     .split("\\s++");
-        }
-        else {
+        } else {
             String test = coords.replace("))\"", "");
             test = test.strip();
-            lonLat=test.split("\\s++");
+            lonLat = test.split("\\s++");
             int index = input.indexOf("\"");
-            input = input.substring(0,index);
+            input = input.substring(0, index);
             parts = input.split(",", -1);
         }
-        String coordinates= lonLat[1]+" "+lonLat[0];
-        for ( int i=0; i < parts.length-1; i++ ) {
+        String coordinates = lonLat[1] + " " + lonLat[0];
+        for (int i = 0; i < parts.length - 1; i++) {
             String part = parts[i];
-            if(!part.isEmpty())
+            if (!part.isEmpty())
                 result.append(part)
-                    .append(",");
+                        .append(",");
             else result.append(",");
         }
         result.append(coordinates);
