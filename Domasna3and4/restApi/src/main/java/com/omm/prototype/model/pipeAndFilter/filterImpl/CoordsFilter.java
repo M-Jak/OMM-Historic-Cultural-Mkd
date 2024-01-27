@@ -3,6 +3,24 @@ package com.omm.prototype.model.pipeAndFilter.filterImpl;
 import com.omm.prototype.model.pipeAndFilter.Filter;
 
 public class CoordsFilter implements Filter<String> {
+    // Static instance variable for singleton
+    private static CoordsFilter instance;
+
+    // Private constructor to prevent instantiation
+    private CoordsFilter() {
+        // Optional: Initialization code if needed
+    }
+
+    // Static method to get the singleton instance
+    public static CoordsFilter getInstance() {
+            synchronized (CoordsFilter.class) {
+                if (instance == null) {
+                    instance = new CoordsFilter();
+                }
+            }
+        return instance;
+    }
+
     /**
      * Parses the input string to extract coordinates and constructs a new string with modified formatting.
      * If the last part of the input contains "WKT", returns an empty string.
@@ -25,8 +43,7 @@ public class CoordsFilter implements Filter<String> {
             lonLat=coords.replace("POINT (", "")
                     .replace(")", "")
                     .split("\\s++");
-        }
-        else { // if it contains "POLYGON"
+        } else { // if it contains "POLYGON"
             String test = coords.replace("))\"", "");
             test = test.strip();
             lonLat=test.split("\\s++");

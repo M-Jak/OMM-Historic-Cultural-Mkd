@@ -14,18 +14,6 @@ import java.util.Scanner;
 
 @Repository
 public class PinRepository {
-    private final Filter<String> coordsFilter = new CoordsFilter();
-    private final Filter<String> archaeologicalSiteFilter = new ArchaeologicalSiteFilter();
-    private final Filter<String> artworkFilter = new ArtworkFilter();
-    private final Filter<String> libraryFilter = new LibraryFilter();
-    private final Filter<String> memorialFilter = new MemorialFilter();
-    private final Filter<String> monumentFilter = new MonumentFilter();
-    private final Filter<String> tombFilter = new TombFilter();
-    private final Filter<String> tourismFilter = new TourismFilter();
-    private final Filter<String> worshipFilter = new WorshipFilter();
-    private final Filter<String> historicFilter = new HistoricFilter();
-    private final Filter<String> amenityFilter = new AmenityFilter();
-    private final Filter<String> museumFilter = new MuseumFilter();
 
     /**
      * Processes the input from a scanner using the specified pipe of filters.
@@ -59,7 +47,7 @@ public class PinRepository {
      */
     public List<Pin> getAll() {
         Pipe<String> allPipe = new Pipe<>();
-        allPipe.addFilter(coordsFilter);
+        allPipe.addFilter(CoordsFilter.getInstance());
         List<Pin> pins = new ArrayList<>();
         try {
             pins = processScannerInput(allPipe);
@@ -78,20 +66,31 @@ public class PinRepository {
      */
     public List<Pin> getAllByType(String type) {
         Pipe<String> typePipe = new Pipe<>();
-        typePipe.addFilter(coordsFilter);
+        typePipe.addFilter(CoordsFilter.getInstance()); // Create instance here
 
         switch (type) {
-            case "archaeological_site" -> typePipe.addFilter(archaeologicalSiteFilter);
-            case "artwork" -> typePipe.addFilter(artworkFilter);
-            case "library" -> typePipe.addFilter(libraryFilter);
-            case "memorial" -> typePipe.addFilter(memorialFilter);
-            case "monument" -> typePipe.addFilter(monumentFilter);
-            case "tomb" -> typePipe.addFilter(tombFilter);
-            case "tourism" -> typePipe.addFilter(tourismFilter);
-            case "worship" -> typePipe.addFilter(worshipFilter);
-            case "historic" -> typePipe.addFilter(historicFilter);
-            case "amenity" -> typePipe.addFilter(amenityFilter);
-            case "museum" -> typePipe.addFilter(museumFilter);
+            case "archaeological_site": typePipe.addFilter(ArchaeologicalSiteFilter.getInstance());
+                break;
+            case "artwork": typePipe.addFilter(ArtworkFilter.getInstance());
+                break;
+            case "library": typePipe.addFilter(LibraryFilter.getInstance());
+                break;
+            case "memorial": typePipe.addFilter(MemorialFilter.getInstance());
+                break;
+            case "monument": typePipe.addFilter(MonumentFilter.getInstance());
+                break;
+            case "tomb": typePipe.addFilter(TombFilter.getInstance());
+                break;
+            case "tourism": typePipe.addFilter(TourismFilter.getInstance());
+                break;
+            case "worship": typePipe.addFilter(WorshipFilter.getInstance());
+                break;
+            case "historic": typePipe.addFilter(HistoricFilter.getInstance());
+                break;
+            case "amenity": typePipe.addFilter(AmenityFilter.getInstance());
+                break;
+            case "museum": typePipe.addFilter(MuseumFilter.getInstance());
+                break;
         }
         List<Pin> pins = new ArrayList<>();
         try {
