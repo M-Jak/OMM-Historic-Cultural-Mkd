@@ -13,7 +13,7 @@ Members:
 
 [Link to application](https://omm-app.nicepebble-3b5681aa.westeurope.azurecontainerapps.io/)  
 
-[Link to api](https://omm-api.nicepebble-3b5681aa.westeurope.azurecontainerapps.io)
+[Link to pins microservice](https://omm-api.nicepebble-3b5681aa.westeurope.azurecontainerapps.io)
 
 Апликацијата и апи-то се хостирани користејќи Container App на Azure, од images креирани со docker-compose и соодветни dockerfile датотеки.
 Поставени се во заеднички environment, што може да се види и од името на доменот во линковите погоре.
