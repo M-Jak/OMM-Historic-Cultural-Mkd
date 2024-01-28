@@ -11,6 +11,6 @@ Members:
 
 211208 - Nik0la23
 
-[Link to application](https://white-sand-036cc6903.4.azurestaticapps.net/)
+[Link to application](https://omm-app.nicepebble-3b5681aa.westeurope.azurecontainerapps.io/)  
 
-[Link to api](https://ommrestapi.redglacier-2cae781d.westeurope.azurecontainerapps.io/omm/api/all)
+[Link to api](https://omm-api.nicepebble-3b5681aa.westeurope.azurecontainerapps.io)
