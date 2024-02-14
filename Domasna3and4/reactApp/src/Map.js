@@ -14,6 +14,8 @@ const Map = () => {
     const apiHost = process.env.REACT_APP_API_HOST;
     const url = `${apiHost}/omm/api/`;
     const [data, setData] = useState([]);
+    // variable for the cities information
+    const [cities, setCities] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("all");
     // eslint-disable-next-line no-unused-vars
     const [filterText, setFilterText] = useState("");
@@ -30,6 +32,10 @@ const Map = () => {
         iconSize: [32, 32],
         popupAnchor: [0, -20],
     });
+
+    useEffect(function getCities() {
+        fetchCitiesData();
+    }, []);
 
     useEffect(
         function loadMap(){
@@ -60,25 +66,62 @@ const Map = () => {
     };
 
     useEffect(
-        function placePinsOnMap(){
-        if (map.current) {
+        function placePinsOnMap() {
+        if (map.current && cities.length > 0) {
             map.current.eachLayer((layer) => {
-                if (layer instanceof L.Marker) {
+                if (layer instanceof L.Marker || layer instanceof L.Circle) {
                     map.current.removeLayer(layer);
                 }
             });
 
             const pinsToUse = filteredData.length > 0 ? filteredData : data;
+
+            const distances = cities.map((city) => {
+                return pinsToUse.map((item) => {
+                    return map.current.distance(
+                        [item.latitude, item.longitude],
+                        [city.latitude, city.longitude]
+                    );
+                });
+            });
+            const maxDistance = Math.max(...distances.flat());
+
             pinsToUse.forEach((item) => {
+                // Calculate the distance to the nearest city for each location
+                const distancesToCities = cities.map((city) => {
+                    return map.current.distance(
+                        [item.latitude, item.longitude],
+                        [city.latitude, city.longitude]
+                    );
+                });
+
+                // Find the minimum distance
+                const minDistance = Math.min(...distancesToCities);
+
+                // normalization because without it the circles are as big as the entire world map
+                const normalizedDistance = minDistance / maxDistance;
+
+                // Normalization is scaled up to 50 meters,so the radii of the circles are gonna be between 0m and 50m
+                const radius = normalizedDistance * 50000;
+
+                // Add a marker for each location
                 const marker = L.marker([item.latitude, item.longitude], {
                     icon: placeIcon,
                 }).addTo(map.current);
 
+                // and add a circle for each location
+                L.circle([item.latitude, item.longitude], {
+                    radius: radius,
+                    color: 'blue',
+                    fillColor: '#00e1ff',
+                    fillOpacity: 0.5,
+                }).addTo(map.current);
+
                 marker.bindPopup(
                     `<b>Name: ${item.name}</b><br>Type: ${item.type}<br>English name: ${item.en_name}<br>
-                        <div class="p-2">
-                            <button id="getDirectionsBtn" class="btn btn-secondary btn-sm">Get Directions</button>
-                        </div>`
+                    <div class="p-2">
+                        <button id="getDirectionsBtn" class="btn btn-secondary btn-sm">Get Directions</button>
+                    </div>`
                 ).on("click", () => {
                     marker.openPopup();
 
@@ -121,7 +164,9 @@ const Map = () => {
                 userMarker.bindPopup("Your Current Location").openPopup();
             });
         }
-    }, [placeIcon, data, userIcon, directions, filteredData]);
+    }, [placeIcon, data, userIcon, directions, filteredData, cities]);
+
+
 
     const displayByType = (link) => {
         setData([]);
@@ -151,6 +196,31 @@ const Map = () => {
             setDirections(null);
         }
 
+    };
+
+    // queries the OverpassAPI to obtain information
+    // for cities or towns in the bounding box surrounding Macedonia
+    const fetchCitiesData = () => {
+        let query = `[out:json];(
+            node["place"~"city|town"](41.1,20.9,42.4,23.1);
+        );out;`;
+
+        fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`)
+            .then((response) => response.json())
+            .then((osmData) => {
+                const citiesData = osmData.elements.map((element) => {
+                    return {
+                        id: element.id,
+                        name: element.tags.name,
+                        latitude: element.lat,
+                        longitude: element.lon
+                    };
+                });
+                setCities(citiesData);
+            })
+            .catch((error) => {
+                console.error("Error fetching cities data:", error);
+            });
     };
 
 
