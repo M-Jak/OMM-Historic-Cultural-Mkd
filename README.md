@@ -1,20 +1,12 @@
-# DIANS-Proekt
-Members:
+# Historic and Cultural Locations in Macedonia
+Built by:
 
-211017 - M-Jak
-
-211054 - zdrave123
-
-211090 - SomalianBoi
-
-211102 - k-cvet
-
-211208 - Nik0la23
+[M-Jak](https://github.com/M-Jak)
+[zdrave123](https://github.com/zdrave123)
+[SomalianBoi](https://github.com/SomalianBoi)
+[k-cvet](https://github.com/k-cvet)
+[Nik0la23](https://github.com/Nik0la23)
 
 [Link to application](https://omm-app.nicepebble-3b5681aa.westeurope.azurecontainerapps.io/)  
 
 [Link to pins microservice](https://omm-api.nicepebble-3b5681aa.westeurope.azurecontainerapps.io)
-
-Апликацијата и апи-то се хостирани користејќи Container App на Azure, од images креирани со docker-compose и соодветни dockerfile датотеки.
-Поставени се во заеднички environment, што може да се види и од името на доменот во линковите погоре.
-proxy сервисот служи при локално подигнување на Docker контејнерот, за комуникација меѓу апликацијата и апи-то во рамките на истиот Docker контејнер, односно истата мрежа која се креира со docker-compose.
